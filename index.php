@@ -30,7 +30,7 @@ use Benchmark\Measure;
 require __DIR__ . '/vendor/autoload.php';
 $measure    = new Measure;
 $benchmarks = array(
-    'Auto resolution of object and dependencies (Aliasing Interfaces to Concretes)'   => array(
+    'Auto resolution of object and dependencies (Aliasing Interfaces to Concretes)'  => array(
         'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
@@ -72,7 +72,7 @@ $benchmarks = array(
             $phpdi->get('Benchmark\Stubs\Foo');
         }
     ),
-    'Auto resolution of object and dependencies (Register all objects with container)'   => array(
+    'Auto resolution of object and dependencies (Register all objects with container)' => array(
         'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo');
@@ -129,7 +129,7 @@ $benchmarks = array(
             $phpdi->get('Benchmark\Stubs\Foo');
         }
     ),
-    'Factory closure resolution'                   => array(
+    'Factory closure resolution' => array(
         'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('foo', function () {
@@ -186,7 +186,20 @@ $benchmarks = array(
                     return new Benchmark\Stubs\Foo($bar);
             });
             $aura->get('foo');
-        },
+        },/*
+        'Symfony'    => function () {
+            $loader  = new Symfony\Component\Routing\Loader\ClosureLoader;
+            $loader->load(function () {
+                $bart = new Benchmark\Stubs\Bart;
+                $bam = new Benchmark\Stubs\Bam($bart);
+                $baz = new Benchmark\Stubs\Baz($bam);
+                $bar = new Benchmark\Stubs\Bar($baz);
+                return new Benchmark\Stubs\Foo($bar);
+            });
+            $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
+            $symfony->register('foo', 'Benchmark\Stubs\Foo');
+            $symfony->get('foo');
+        },*/
         'Pimple'     => function () {
             $pimple = new Pimple;
             $pimple['foo'] = function () {
@@ -334,10 +347,7 @@ $benchmarks = array(
             $aura->setter['Benchmark\Stubs\Bar']['setBaz'] = $aura->lazyNew('Benchmark\Stubs\Baz');
             $aura->setter['Benchmark\Stubs\Foo']['setBar'] = $aura->lazyNew('Benchmark\Stubs\Bar');
             $aura->newInstance('Benchmark\Stubs\Foo');
-        },/*
-        'Pimple'     => function () {
-
-        },*/
+        },
         'Symfony'    => function () {
             $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
             $symfony->register('foo', 'Benchmark\Stubs\Foo')->addMethodCall('setBar', [new Symfony\Component\DependencyInjection\Reference('bar')]);
@@ -346,10 +356,53 @@ $benchmarks = array(
             $symfony->register('bam', 'Benchmark\Stubs\Bam')->addMethodCall('setBart', [new Symfony\Component\DependencyInjection\Reference('bart')]);
             $symfony->register('bart', 'Benchmark\Stubs\Bart');
             $symfony->get('foo');
-        }/*,
+        },
         'Zend'       => function () {
-
-        }*/
+            $zend = new Zend\Di\Di;
+            $zend->configure(new Zend\Di\Config(array(
+                'definition' => array(
+                    'class' => array(
+                        'Benchmark\Stubs\Bam' => array(
+                            'setBart' => array(
+                                'required' => true,
+                                'bart' => array(
+                                    'type' => 'Benchmark\Stubs\Bart',
+                                    'required' => true
+                                )
+                            )
+                        ),
+                        'Benchmark\Stubs\Baz' => array(
+                            'setBam' => array(
+                                'required' => true,
+                                'bam' => array(
+                                    'type' => 'Benchmark\Stubs\Bam',
+                                    'required' => true
+                                )
+                            )
+                        ),
+                        'Benchmark\Stubs\Bar' => array(
+                            'setBaz' => array(
+                                'required' => true,
+                                'baz' => array(
+                                    'type' => 'Benchmark\Stubs\Baz',
+                                    'required' => true
+                                )
+                            )
+                        ),
+                        'Benchmark\Stubs\Foo' => array(
+                            'setBar' => array(
+                                'required' => true,
+                                'bar' => array(
+                                    'type' => 'Benchmark\Stubs\Bar',
+                                    'required' => true
+                                )
+                            )
+                        )
+                    )
+                )
+            )));
+            $zend->get('Benchmark\Stubs\Foo');
+        }
     )
 );
 $included   = function ($name) {
