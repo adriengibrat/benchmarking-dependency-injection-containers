@@ -44,11 +44,11 @@ $benchmarks = array(
             $league->resolve('Benchmark\Stubs\Foo');
         },
         'Illuminate' => function () {
-                $illuminate = new Illuminate\Container\Container;
-                $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
-                $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-                $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
-                $illuminate->make('Foo');
+            $illuminate = new Illuminate\Container\Container;
+            $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
+            $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+            $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+            $illuminate->make('Foo');
         },
         'Zend'       => function () {
             $zend = new Zend\Di\Di;
@@ -232,7 +232,16 @@ $benchmarks = array(
             $league->resolve('Benchmark\Stubs\Foo');
         },/*
         'Illuminate' => function () {
-
+            $illuminate = new Illuminate\Container\Container;
+            $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
+            function () {
+                return
+            }
+            $illuminate->bind('Benchmark\Stubs\Bar');
+            $illuminate->bind('Benchmark\Stubs\Bam');
+            $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+            $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
+            $illuminate->make('foo');
         },*/
         'PHP-DI'     => function () {
             $phpdi = new DI\Container;
