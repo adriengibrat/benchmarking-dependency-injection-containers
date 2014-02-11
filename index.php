@@ -11,11 +11,13 @@
             series: [
                 {targetAxisIndex: 0, color: '#FF6961'},
                 {targetAxisIndex: 1, color: '#FFB347'},
-                {targetAxisIndex: 2, color: '#77DD77', opacity: 0.5}
+                {targetAxisIndex: 2, color: '#CCC', opacity: 0.5},
+                {targetAxisIndex: 3, color: '#77DD77', opacity: 0.5}
             ],
             vAxes: [
                 {textStyle: {color: '#FF6961'}},
                 {textStyle: {color: '#FFB347'}},
+                {textPosition: 'none'},
                 {textPosition: 'none'}
             ]
         };
@@ -27,35 +29,34 @@ use Benchmark\Measure;
 
 require __DIR__ . '/vendor/autoload.php';
 $measure    = new Measure;
-
 $benchmarks = array(
     'Auto resolution of object and dependencies (Aliasing Interfaces to Concretes)'   => array(
-        'Orno\\Di'              => function () {
+        'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
             $orno->add('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $orno->get('Benchmark\Stubs\Foo');
         },
-        'League\\Di'            => function () {
+        'League'     => function () {
             $league = new League\Di\Container;
             $league->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
             $league->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $league->resolve('Benchmark\Stubs\Foo');
         },
-        'Illuminate\\Container' => function () {
+        'Illuminate' => function () {
                 $illuminate = new Illuminate\Container\Container;
                 $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
                 $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
                 $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
                 $illuminate->make('Foo');
         },
-        'Zend\\Di'              => function () {
+        'Zend'       => function () {
             $zend = new Zend\Di\Di;
             $zend->instanceManager()->addTypePreference('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
             $zend->instanceManager()->addTypePreference('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $zend->get('Benchmark\Stubs\Foo');
         },
-        'PHP-DI'                => function () {
+        'PHP-DI'     => function () {
             $phpdi = new DI\Container;
             $phpdi->useAnnotations(false);
             $phpdi->addDefinitions(
@@ -72,7 +73,7 @@ $benchmarks = array(
         }
     ),
     'Auto resolution of object and dependencies (Register all objects with container)'   => array(
-        'Orno\\Di'              => function () {
+        'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo');
             $orno->add('Benchmark\Stubs\Bar', 'Benchmark\Stubs\Bar');
@@ -81,7 +82,7 @@ $benchmarks = array(
             $orno->add('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $orno->get('Benchmark\Stubs\Foo');
         },
-        'League\\Di'            => function () {
+        'League'     => function () {
             $league = new League\Di\Container;
             $league->bind('Benchmark\Stubs\Foo');
             $league->bind('Benchmark\Stubs\Bar');
@@ -90,7 +91,7 @@ $benchmarks = array(
             $league->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $league->resolve('Benchmark\Stubs\Foo');
         },
-        'Illuminate\\Container' => function () {
+        'Illuminate' => function () {
             $illuminate = new Illuminate\Container\Container;
             $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
             $illuminate->bind('Benchmark\Stubs\Bar');
@@ -99,7 +100,7 @@ $benchmarks = array(
             $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $illuminate->make('Foo');
         },
-        'Zend\\Di'              => function () {
+        'Zend'       => function () {
             $zend = new Zend\Di\Di;
             $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Foo', 'Benchmark\Stubs\Foo');
             $zend->instanceManager()->addTypePreference('Benchmark\Stubs\Bar', 'Benchmark\Stubs\Bar');
@@ -108,7 +109,7 @@ $benchmarks = array(
             $zend->instanceManager()->addTypePreference('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             $zend->get('Benchmark\Stubs\Foo');
         },
-        'PHP-DI'                => function () {
+        'PHP-DI'     => function () {
             $phpdi = new DI\Container;
             $phpdi->useReflection(false);
             $phpdi->useAnnotations(false);
@@ -129,7 +130,7 @@ $benchmarks = array(
         }
     ),
     'Factory closure resolution'                   => array(
-        'Orno\\Di'              => function () {
+        'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('foo', function () {
                     $bart = new Benchmark\Stubs\Bart;
@@ -140,7 +141,7 @@ $benchmarks = array(
             });
             $orno->get('foo');
         },
-        'League\\Di'            => function () {
+        'League'     => function () {
             $league = new League\Di\Container;
             $league->bind('foo', function () {
                     $bart = new Benchmark\Stubs\Bart;
@@ -151,7 +152,7 @@ $benchmarks = array(
             });
             $league->resolve('foo');
         },
-        'Illuminate\\Container' => function () {
+        'Illuminate' => function () {
             $illuminate = new Illuminate\Container\Container;
             $illuminate->bind('foo', function () {
                     $bart = new Benchmark\Stubs\Bart;
@@ -162,7 +163,7 @@ $benchmarks = array(
             });
             $illuminate->make('foo');
         },
-        'PHP-DI'                => function () {
+        'PHP-DI'     => function () {
             $phpdi = new DI\Container;
             $phpdi->useReflection(false);
             $phpdi->useAnnotations(false);
@@ -175,7 +176,7 @@ $benchmarks = array(
             });
             $phpdi->get('foo');
         },
-        'Aura\\Di'              => function () {
+        'Aura'       => function () {
             $aura = new Aura\Di\Container(new Aura\Di\Factory);
             $aura->set('foo', function () {
                     $bart = new Benchmark\Stubs\Bart;
@@ -186,7 +187,7 @@ $benchmarks = array(
             });
             $aura->get('foo');
         },
-        'Pimple'                => function () {
+        'Pimple'     => function () {
             $pimple = new Pimple;
             $pimple['foo'] = function () {
                 $bart = new Benchmark\Stubs\Bart;
@@ -199,7 +200,7 @@ $benchmarks = array(
         }
     ),
     'Constructor injection with defined arguments' => array(
-        'Orno\\Di'              => function () {
+        'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('Benchmark\Stubs\Bart');
             $orno->add('Benchmark\Stubs\Bam')->withArgument('Benchmark\Stubs\Bart');
@@ -208,7 +209,7 @@ $benchmarks = array(
             $orno->add('Benchmark\Stubs\Foo')->withArgument('Benchmark\Stubs\Bar');
             $orno->get('Benchmark\Stubs\Foo');
         },
-        'League\\Di'            => function () {
+        'League'     => function () {
             $league = new League\Di\Container;
             $league->bind('Benchmark\Stubs\Bart');
             $league->bind('Benchmark\Stubs\Bam')->addArg('Benchmark\Stubs\Bart');
@@ -217,10 +218,10 @@ $benchmarks = array(
             $league->bind('Benchmark\Stubs\Foo')->addArg('Benchmark\Stubs\Bar');
             $league->resolve('Benchmark\Stubs\Foo');
         },/*
-        'Illuminate\\Container' => function () {
+        'Illuminate' => function () {
 
         },*/
-        'PHP-DI'                => function () {
+        'PHP-DI'     => function () {
             $phpdi = new DI\Container;
             $phpdi->useReflection(false);
             $phpdi->useAnnotations(false);
@@ -242,7 +243,7 @@ $benchmarks = array(
             );
             $phpdi->get('Benchmark\Stubs\Foo');
         },
-        'Aura\\Di'              => function () {
+        'Aura'       => function () {
             $aura = new Aura\Di\Container(new Aura\Di\Factory);
             $aura->params['Benchmark\Stubs\Bam'] = ['bart' => $aura->lazyNew('Benchmark\Stubs\Bart')];
             $aura->params['Benchmark\Stubs\Baz'] = ['bam' => $aura->lazyNew('Benchmark\Stubs\Bam')];
@@ -250,10 +251,10 @@ $benchmarks = array(
             $aura->params['Benchmark\Stubs\Foo'] = ['bar' => $aura->lazyNew('Benchmark\Stubs\Bar')];
             $aura->newInstance('Benchmark\Stubs\Foo');
         },/*
-        'Pimple'                => function () {
+        'Pimple'     => function () {
 
         },*/
-        'Symfony'               => function () {
+        'Symfony'    => function () {
             $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
             $symfony->register('foo', 'Benchmark\Stubs\Foo')->addArgument(new Symfony\Component\DependencyInjection\Reference('bar'));
             $symfony->register('bar', 'Benchmark\Stubs\Bar')->addArgument(new Symfony\Component\DependencyInjection\Reference('baz'));
@@ -262,7 +263,7 @@ $benchmarks = array(
             $symfony->register('bart', 'Benchmark\Stubs\Bart');
             $symfony->get('foo');
         },
-        'Zend\\Di'              => function () {
+        'Zend'       => function () {
             $zend = new Zend\Di\Di;
             $zend->instanceManager()->setInjections('Benchmark\Stubs\Foo', ['Benchmark\Stubs\Bar']);
             $zend->instanceManager()->setInjections('Benchmark\Stubs\Bar', ['Benchmark\Stubs\Baz']);
@@ -272,7 +273,7 @@ $benchmarks = array(
         }
     ),
     'Setter injection with defined setter methods' => array(
-        'Orno\\Di'              => function () {
+        'Orno'       => function () {
             $orno = new Orno\Di\Container;
             $orno->add('Benchmark\Stubs\Bart');
             $orno->add('Benchmark\Stubs\Bam')->withMethodCall('setBart', ['Benchmark\Stubs\Bart']);
@@ -281,7 +282,7 @@ $benchmarks = array(
             $orno->add('Benchmark\Stubs\Foo')->withMethodCall('setBar', ['Benchmark\Stubs\Bar']);
             $orno->get('Benchmark\Stubs\Foo');
         },
-        'League\\Di'            => function () {
+        'League'     => function () {
             $league = new League\Di\Container;
             $league->bind('Benchmark\Stubs\Bart');
             $league->bind('Benchmark\Stubs\Bam')->withMethod('setBart', ['Benchmark\Stubs\Bart']);
@@ -290,10 +291,10 @@ $benchmarks = array(
             $league->bind('Benchmark\Stubs\Foo')->withMethod('setBar', ['Benchmark\Stubs\Bar']);
             $league->resolve('Benchmark\Stubs\Foo');
         },/*
-        'Illuminate\\Container' => function () {
+        'Illuminate' => function () {
 
         },*/
-        'PHP-DI'                => function () {
+        'PHP-DI'     => function () {
             $phpdi = new DI\Container;
             $phpdi->useReflection(false);
             $phpdi->useAnnotations(false);
@@ -326,7 +327,7 @@ $benchmarks = array(
             );
             $phpdi->get('Benchmark\Stubs\Foo');
         },
-        'Aura\\Di'              => function () {
+        'Aura'       => function () {
             $aura = new Aura\Di\Container(new Aura\Di\Factory);
             $aura->setter['Benchmark\Stubs\Bam']['setBart'] = $aura->lazyNew('Benchmark\Stubs\Bart');
             $aura->setter['Benchmark\Stubs\Baz']['setBam'] = $aura->lazyNew('Benchmark\Stubs\Bam');
@@ -334,10 +335,10 @@ $benchmarks = array(
             $aura->setter['Benchmark\Stubs\Foo']['setBar'] = $aura->lazyNew('Benchmark\Stubs\Bar');
             $aura->newInstance('Benchmark\Stubs\Foo');
         },/*
-        'Pimple'                => function () {
+        'Pimple'     => function () {
 
         },*/
-        'Symfony'              => function () {
+        'Symfony'    => function () {
             $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
             $symfony->register('foo', 'Benchmark\Stubs\Foo')->addMethodCall('setBar', [new Symfony\Component\DependencyInjection\Reference('bar')]);
             $symfony->register('bar', 'Benchmark\Stubs\Bar')->addMethodCall('setBaz', [new Symfony\Component\DependencyInjection\Reference('baz')]);
@@ -346,26 +347,33 @@ $benchmarks = array(
             $symfony->register('bart', 'Benchmark\Stubs\Bart');
             $symfony->get('foo');
         }/*,
-        'Zend\\Di'             => function () {
+        'Zend'       => function () {
 
         }*/
     )
 );
-
-gc_disable();
-$graph_json = function (&$benchmark) use ($measure) {
+$included   = function ($name) {
+    static $init;
+    $filter = function ($file) use ($name) {
+        return stristr($file, $name);
+    };
+    $init = ! $init;
+    return $init ? 0 : count(array_filter(get_included_files(), $filter));
+};
+$graph_json = function (&$benchmark) use ($measure, $included) {
     $sort = $results = array();
     foreach ($benchmark as $name => $test) {
-        $test();
-        //$files     = $measure->benchmarkCustom($fileCount, $test);
+        $files     = $measure->benchmarkCustom($included, $test, array($name));
         $memory    = $measure->benchmarkMemory($test);
         $time      = $measure->benchmarkTime($test, [], 100);
         $sort[]    = $time[Measure::BENCHMARK_AVERAGE];
+        unset($test);
         $benchmark[$name] = null;
         $results[] = array(
             $name,
             $time[Measure::BENCHMARK_AVERAGE] * 1000,
             $memory[Measure::MEMORY_VALUE] / 1024,
+            $files[Measure::BENCHMARK_VALUE],
             gc_collect_cycles()
         );
     }
@@ -374,13 +382,14 @@ $graph_json = function (&$benchmark) use ($measure) {
             'Component',
             'Time per test, average in µs',
             'Memory usage for one test in kb',
+            'Files included',
             'Cycle collected after ' . $time[Measure::BENCHMARK_COUNT] . ' tests'
         ));
     return implode(",\n                ", array_map('json_encode', $results)) . "\n";
 };
 $i          = 0;
-foreach ($benchmarks as $title => &$benchmark) :
-    ?>
+gc_disable();
+foreach ($benchmarks as $title => &$benchmark) :  ?>
     <h1>Benchmark <?= ++$i . ' : ' . $title; ?>.</h1>
     <div id="benchmark<?= $i; ?>"></div>
     <script type="text/javascript">
@@ -393,7 +402,7 @@ foreach ($benchmarks as $title => &$benchmark) :
         });
     </script>
     <?php
-    echo 'Memory peak : ', memory_get_peak_usage(true) / 1024 / 1024, 'Mb';
+echo 'Memory peak : ', memory_get_peak_usage(true) / 1024 / 1024, 'Mb';
 endforeach;
 ?>
 </body>
