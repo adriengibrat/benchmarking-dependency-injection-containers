@@ -43,7 +43,7 @@ $benchmarks = array(
     'Auto resolution of object and dependencies (Aliasing Interfaces to Concretes)'  => array(
         'Orno'       => function () {
             $orno = new Orno\Di\Container;
-            $orno->add('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
+            $orno->add('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');//->withArgument('Benchmark\Stubs\Bam');
             $orno->add('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
             return $orno->get('Benchmark\Stubs\Foo');
         },
@@ -66,18 +66,11 @@ $benchmarks = array(
             return $zend->get('Benchmark\Stubs\Foo');
         },
         'PHP-DI'     => function () {
-            $phpdi = new DI\Container;
-            $phpdi->useAnnotations(false);
-            $phpdi->addDefinitions(
-                array(
-                    'Benchmark\Stubs\BazInterface'  => array(
-                        'class' => 'Benchmark\Stubs\Baz'
-                    ),
-                    'Benchmark\Stubs\BartInterface'  => array(
-                        'class' => 'Benchmark\Stubs\Bart'
-                    ),
-                )
-            );
+            $builder = new DI\ContainerBuilder();
+            $builder->useAnnotations(false);
+            $phpdi = $builder->build();
+            $phpdi->set('Benchmark\Stubs\BazInterface', DI\object('Benchmark\Stubs\Baz'));
+            $phpdi->set('Benchmark\Stubs\BartInterface', DI\object('Benchmark\Stubs\Bart'));
             return $phpdi->get('Benchmark\Stubs\Foo');
         }
     ),
@@ -119,20 +112,14 @@ $benchmarks = array(
             return $zend->get('Benchmark\Stubs\Foo');
         },
         'PHP-DI'     => function () {
-            $phpdi = new DI\Container;
-            $phpdi->useReflection(false);
-            $phpdi->useAnnotations(false);
-            $phpdi->addDefinitions(array(
-                    'Benchmark\Stubs\Foo'  => array(),
-                    'Benchmark\Stubs\Bar'  => array(),
-                    'Benchmark\Stubs\Bam'  => array(),
-                    'Benchmark\Stubs\BazInterface'  => array(
-                        'class' => 'Benchmark\Stubs\Baz'
-                    ),
-                    'Benchmark\Stubs\BartInterface'  => array(
-                        'class' => 'Benchmark\Stubs\Bart'
-                    )
-            ));
+            $builder = new DI\ContainerBuilder();
+            $builder->useAnnotations(false);
+            $phpdi = $builder->build();
+            $phpdi->set('Benchmark\Stubs\Foo', DI\object('Benchmark\Stubs\Foo'));
+            $phpdi->set('Benchmark\Stubs\Bar', DI\object('Benchmark\Stubs\Bar'));
+            $phpdi->set('Benchmark\Stubs\Bam', DI\object('Benchmark\Stubs\Bam'));
+            $phpdi->set('Benchmark\Stubs\BazInterface', DI\object('Benchmark\Stubs\Baz'));
+            $phpdi->set('Benchmark\Stubs\BartInterface', DI\object('Benchmark\Stubs\Bart'));
             return $phpdi->get('Benchmark\Stubs\Foo');
         }
     ),
@@ -153,10 +140,11 @@ $benchmarks = array(
             return $illuminate->make('foo');
         },
         'PHP-DI'     => function () use ($factory) {
-            $phpdi = new DI\Container;
-            $phpdi->useReflection(false);
-            $phpdi->useAnnotations(false);
-            $phpdi->set('foo', $factory);
+            $builder = new DI\ContainerBuilder();
+            $builder->useAutowiring(false);
+            $builder->useAnnotations(false);
+            $phpdi = $builder->build();
+            $phpdi->set('foo', DI\factory($factory));
             return $phpdi->get('foo');
         },
         'Aura'       => function () use ($factory) {
@@ -188,36 +176,20 @@ $benchmarks = array(
             $league->bind('Benchmark\Stubs\Bar')->addArg('Benchmark\Stubs\Baz');
             $league->bind('Benchmark\Stubs\Foo')->addArg('Benchmark\Stubs\Bar');
             return $league->resolve('Benchmark\Stubs\Foo');
-        },/*
-        'Illuminate' => function () {
+        },
+        /*'Illuminate' => function () {
             $illuminate = new Illuminate\Container\Container;
-            $illuminate->bind('Foo', 'Benchmark\Stubs\Foo');
-            $illuminate->bind('Benchmark\Stubs\Bar');
-            $illuminate->bind('Benchmark\Stubs\Bam');
-            $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-            $illuminate->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
-            $illuminate->make('foo');
         },*/
         'PHP-DI'     => function () {
-            $phpdi = new DI\Container;
-            $phpdi->useReflection(false);
-            $phpdi->useAnnotations(false);
-            $phpdi->addDefinitions(
-                array(
-                    'Benchmark\Stubs\Bam'  => array(
-                        'constructor' => array('Benchmark\Stubs\Bart'),
-                    ),
-                    'Benchmark\Stubs\Baz'  => array(
-                        'constructor' => array('Benchmark\Stubs\Bam'),
-                    ),
-                    'Benchmark\Stubs\Bar'  => array(
-                        'constructor' => array('Benchmark\Stubs\Baz'),
-                    ),
-                    'Benchmark\Stubs\Foo'  => array(
-                        'constructor' => array('Benchmark\Stubs\Bar'),
-                    ),
-                )
-            );
+            $builder = new DI\ContainerBuilder();
+            $builder->useAutowiring(false);
+            $builder->useAnnotations(false);
+            $phpdi = $builder->build();
+            $phpdi->set('Benchmark\Stubs\Bart', DI\object('Benchmark\Stubs\Bart'));
+            $phpdi->set('Benchmark\Stubs\Bam', DI\object()->constructor(DI\link('Benchmark\Stubs\Bart')));
+            $phpdi->set('Benchmark\Stubs\Baz', DI\object()->constructor(DI\link('Benchmark\Stubs\Bam')));
+            $phpdi->set('Benchmark\Stubs\Bar', DI\object()->constructor(DI\link('Benchmark\Stubs\Baz')));
+            $phpdi->set('Benchmark\Stubs\Foo', DI\object()->constructor(DI\link('Benchmark\Stubs\Bar')));
             return $phpdi->get('Benchmark\Stubs\Foo');
         },
         'Aura'       => function () {
@@ -227,10 +199,8 @@ $benchmarks = array(
             $aura->params['Benchmark\Stubs\Bar']['baz']  = $aura->lazyNew('Benchmark\Stubs\Baz');
             $aura->params['Benchmark\Stubs\Foo']['bar']  = $aura->lazyNew('Benchmark\Stubs\Bar');
             return $aura->newInstance('Benchmark\Stubs\Foo');
-        },/*
-        'Pimple'     => function () {
-
-        },*/
+        },
+        /*'Pimple'     => function () {},*/
         'Symfony'    => function () {
             $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
             $symfony->register('foo', 'Benchmark\Stubs\Foo')->addArgument(new Symfony\Component\DependencyInjection\Reference('bar'));
@@ -275,41 +245,18 @@ $benchmarks = array(
             $league->bind('Benchmark\Stubs\Bar')->withMethod('setBaz', array('Benchmark\Stubs\Baz'));
             $league->bind('Benchmark\Stubs\Foo')->withMethod('setBar', array('Benchmark\Stubs\Bar'));
             return $league->resolve('Benchmark\Stubs\Foo');
-        },/*
-        'Illuminate' => function () {
-
-        },*/
+        },
+        /*'Illuminate' => function () {},*/
         'PHP-DI'     => function () {
-            $phpdi = new DI\Container;
-            $phpdi->useReflection(false);
-            $phpdi->useAnnotations(false);
-            $phpdi->addDefinitions(
-                array(
-                    'Benchmark\Stubs\Bart'  => array(
-                        'class' => 'Benchmark\Stubs\Bart'
-                    ),
-                    'Benchmark\Stubs\Bam'  => array(
-                        'methods' => array(
-                            'setBart' => 'Benchmark\Stubs\Bart',
-                        ),
-                    ),
-                    'Benchmark\Stubs\Baz'  => array(
-                        'methods' => array(
-                            'setBam' => 'Benchmark\Stubs\Bam',
-                        ),
-                    ),
-                    'Benchmark\Stubs\Bar'  => array(
-                        'methods' => array(
-                            'setBaz' => 'Benchmark\Stubs\Baz',
-                        ),
-                    ),
-                    'Benchmark\Stubs\Foo'  => array(
-                        'methods' => array(
-                            'setBar' => 'Benchmark\Stubs\Bar',
-                        ),
-                    ),
-                )
-            );
+            $builder = new DI\ContainerBuilder();
+            $builder->useAutowiring(false);
+            $builder->useAnnotations(false);
+            $phpdi = $builder->build();
+            $phpdi->set('Benchmark\Stubs\Bart', DI\object('Benchmark\Stubs\Bart'));
+            $phpdi->set('Benchmark\Stubs\Bam', DI\object()->method('setBart', DI\link('Benchmark\Stubs\Bart')));
+            $phpdi->set('Benchmark\Stubs\Baz', DI\object()->method('setBam', DI\link('Benchmark\Stubs\Bam')));
+            $phpdi->set('Benchmark\Stubs\Bar', DI\object()->method('setBaz', DI\link('Benchmark\Stubs\Baz')));
+            $phpdi->set('Benchmark\Stubs\Foo', DI\object()->method('setBar', DI\link('Benchmark\Stubs\Bar')));
             return $phpdi->get('Benchmark\Stubs\Foo');
         },
         'Aura'       => function () {
@@ -405,7 +352,7 @@ $graph_json = function (&$benchmark, $title) use ($measure) {
         $time      = $measure->benchmarkTime($test, [], 200);
         $benchmark[$name] = null;
         $collected = gc_collect_cycles();
-        $sort[]    = $memory[Measure::MEMORY_VALUE];
+        $sort[]    = $name;
         $results[] = array(
             $name,
             $memory[Measure::MEMORY_VALUE] / 1024,
@@ -420,7 +367,7 @@ $graph_json = function (&$benchmark, $title) use ($measure) {
         'Component',
         'Memory usage for one test in kb',
         'Time per test, average in µs',
-        'Test # of code lines',
+        'Approx. # of code lines',
         'Files included',
         'Cycle collected after ' . $time[Measure::BENCHMARK_COUNT] . ' tests'
     ));
