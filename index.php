@@ -394,7 +394,8 @@ $graph_json = function (&$benchmark, $title) use ($measure) {
         $codeLines = $code->getEndLine() - $code->getStartLine();
         $instance  = $test();
         if (!isset($instance->bar->baz->bam->bart)) {
-            $messages[] = $name . ' injected null  param to build Foo object (used default parameter?) : ' . var_export($instance, true);
+            $messages[] = $name . ' injected null  param to build Foo object (used default parameter?) : '
+                . preg_replace('/,(\s+)\)\)/', '$1)', str_replace('::__set_state(array', '', var_export($instance, true)));
         }
         $filesInc  = count(array_filter(get_included_files(), function ($file) use ($name) {
             return stristr($file, $name);
