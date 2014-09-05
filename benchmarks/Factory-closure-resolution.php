@@ -29,7 +29,7 @@ return array(
         return $aura->get('foo');
     },
     'Pimple'     => function () use ($factory) {
-        $pimple = new Pimple;
+        $pimple = new Pimple\Container;
         $pimple['foo'] = $factory;
         return $pimple['foo'];
     }

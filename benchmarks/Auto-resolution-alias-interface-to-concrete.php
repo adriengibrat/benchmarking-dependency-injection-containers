@@ -31,5 +31,11 @@ return array(
         $phpdi->set('Benchmark\Stubs\BazInterface', DI\object('Benchmark\Stubs\Baz'));
         $phpdi->set('Benchmark\Stubs\BartInterface', DI\object('Benchmark\Stubs\Bart'));
         return $phpdi->get('Benchmark\Stubs\Foo');
-    }
+    },
+    'Aura'       => function () {
+        $aura = new Aura\Di\Container(new Aura\Di\Factory);
+        $aura->types['Benchmark\Stubs\BazInterface'] = $aura->lazyNew('Benchmark\Stubs\Baz');
+        $aura->types['Benchmark\Stubs\BartInterface'] = $aura->lazyNew('Benchmark\Stubs\Bart');
+        return $aura->newInstance('Benchmark\Stubs\Foo');
+    },
 );
