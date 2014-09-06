@@ -20,5 +20,11 @@
     },
     "autoload": {
         "psr-0": {"Benchmark": "src/"}
+    },
+    "scripts": {
+        "benchmark": "php index.php > index.html",
+        "gh-pages": "git checkout gh-pages && git merge master",
+        "update": "composer run-script gh-pages && composer run-script benchmark",
+        "publish": "git checkout master && git push && composer run-script update && git push"
     }
 }
