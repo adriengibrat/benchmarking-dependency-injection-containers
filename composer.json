@@ -22,9 +22,8 @@
         "psr-0": {"Benchmark": "src/"}
     },
     "scripts": {
-        "benchmark": "php index.php > index.html",
-        "gh-pages": "git checkout gh-pages && git merge master",
-        "update": "composer run-script gh-pages && composer run-script benchmark",
-        "publish": "git checkout master && git push && composer run-script update && git push"
+        "benchmark": "git checkout -q master && php index.php > gh-pages/index.html",
+        "gh-pages": "git checkout -q gh-pages && mv -f gh-pages/index.html index.html && git commit -a -m'update benchmark' && git checkout -q master",
+        "publish": "composer benchmark && git push && composer gh-pages && git push"
     }
 }
