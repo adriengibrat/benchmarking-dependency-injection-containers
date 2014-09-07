@@ -23,7 +23,7 @@
     },
     "scripts": {
         "benchmark": "git checkout -q master && php index.php > gh-pages/index.html",
-        "gh-pages": "git checkout -q gh-pages && mv -f gh-pages/index.html index.html && git commit -a -m'update benchmark' && git checkout -q master",
-        "publish": "composer benchmark && git push && composer gh-pages && git push"
+        "gh-pages": "git checkout -q gh-pages && mv -f gh-pages/index.html index.html && git commit -a -m'update benchmark'",
+        "publish": "composer benchmark && git push && composer gh-pages && git push && git checkout -q master"
     }
 }
