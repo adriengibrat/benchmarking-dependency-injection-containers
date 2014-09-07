@@ -63,9 +63,10 @@
     </script>
 </head>
 <body>
+    <a href="https://github.com/adriengibrat/benchmarking-dependency-injection-containers"><img style="position:absolute;top:0;right:0;border:0;z-index:1" alt="Fork me on GitHub" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
     <label>
-        <input type="checkbox" id="fixedView"/>
-        Graphs use fixed Y axis values
+        <input type="checkbox" id="fixedView" checked/>
+        Use fixed Y axis
     </label>
 <?php
 use Benchmark\Measure;
@@ -95,7 +96,7 @@ $graph_json = function (&$benchmark, $title) use ($measure) {
         $codeLines = $code->getEndLine() - $code->getStartLine();
         $instance  = $test();
         if (!isset($instance->bar->baz->bam->bart)) {
-            $messages[] = $name . ' injected null  param to build Foo object (used default parameter?) : '
+            $messages[] = $name . ' injected a null parameter to build Foo object (used default parameter) : '
                 . preg_replace('/,(\s+)\)\)/', '$1)', str_replace('::__set_state(array', '', var_export($instance, true)));
         }
         $filesInc  = count(array_filter(get_included_files(), function ($file) use ($name) {
