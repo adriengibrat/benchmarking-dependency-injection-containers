@@ -69,7 +69,7 @@
     </label>
 
     <h1>Benchmark 1 : Auto resolution of object and dependencies (Aliasing Interfaces to Concretes).</h1>
-    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.14954566955566,5,6,4200],["Illuminate",1.03125,0.4764199256897,5,2,4400],["Orno",0.9609375,0.28005957603455,5,5,4800],["PHP-DI",1.0859375,0.37930965423584,7,29,7000],["Zend",1.7109375,1.1487054824829,5,25,0]]'></div>
+    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.15270948410034,5,6,4200],["Illuminate",1.03125,0.48232078552246,5,2,4400],["Orno",0.9609375,0.27371883392334,5,5,4800],["PHP-DI",1.0859375,0.38682103157043,7,29,7000],["Zend",1.7109375,1.0370349884033,5,25,0]]'></div>
     <ul>
             <li>Orno injected null  param to build Foo object (used default parameter?) : Benchmark\Stubs\Foo(
    'bar' => 
@@ -90,7 +90,7 @@
     <br/><b>Memory peak : 3.75 Mb</b>
     
     <h1>Benchmark 2 : Auto resolution of object and dependencies (Register all objects with container).</h1>
-    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.19771456718445,8,6,6600],["Illuminate",1.03125,0.59481978416443,8,2,6800],["Orno",0.8203125,0.21265029907227,8,5,5400],["PHP-DI",1.0859375,0.51517009735107,10,29,8800],["Zend",2.140625,5.1014697551727,8,25,0]]'></div>
+    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.19837498664856,8,6,6600],["Illuminate",1.03125,0.56758046150208,8,2,6800],["Orno",0.8203125,0.18900513648987,8,5,5400],["PHP-DI",1.0859375,0.51521420478821,10,29,8800],["Zend",2.140625,4.4469249248505,8,25,0]]'></div>
     <ul>
             <li>Orno injected null  param to build Foo object (used default parameter?) : Benchmark\Stubs\Foo(
    'bar' => NULL
@@ -103,21 +103,21 @@
     <br/><b>Memory peak : 4.5 Mb</b>
     
     <h1>Benchmark 3 : Factory closure resolution.</h1>
-    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.069940090179443,4,7,0],["Illuminate",1.03125,0.06806492805481,4,2,0],["Orno",0.8203125,0.083320140838623,4,6,1800],["PHP-DI",0.6875,0.2411150932312,7,31,6600],["Pimple",0.84375,0.050804615020752,4,1,0]]'></div>
+    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.069735050201416,4,7,0],["Illuminate",1.03125,0.068449974060059,4,2,0],["Orno",0.8203125,0.08277416229248,4,6,1800],["PHP-DI",0.6875,0.24147987365723,7,31,6600],["Pimple",0.84375,0.050865411758423,4,1,0]]'></div>
     <ul>
     
     </ul>
     <br/><b>Memory peak : 4.5 Mb</b>
     
     <h1>Benchmark 4 : Constructor injection with defined arguments.</h1>
-    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.54700016975403,7,7,10400],["Orno",0.8203125,0.35658955574036,8,6,6600],["PHP-DI",0.875,1.4207196235657,11,32,13200],["Symfony",0.921875,1.05677485466,8,9,0],["Zend",2.140625,5.0787043571472,15,25,0]]'></div>
+    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.54911017417908,7,7,10400],["Orno",0.8203125,0.35521984100342,8,6,6600],["PHP-DI",0.875,1.373645067215,11,32,13200],["Symfony",0.921875,1.056125164032,8,9,0],["Zend",2.140625,5.0590646266937,7,25,0]]'></div>
     <ul>
     
     </ul>
     <br/><b>Memory peak : 5.25 Mb</b>
     
     <h1>Benchmark 5 : Setter injection with defined setter methods.</h1>
-    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.65104484558105,7,7,11200],["Orno",1.0234375,0.40165066719055,8,6,9000],["PHP-DI",1.1328125,1.5201652050018,11,32,14000],["Symfony",0.921875,1.2190902233124,16,9,0],["Zend",6.0859375,5.9823942184448,45,29,0]]'></div>
+    <div class="graph" data-results='[["Component","Memory usage for one test in kb","Time per test, average in \u00b5s","Lines of code","Approx. included files","Cycle collected after 200 tests"],["Aura",0.6875,0.63173532485962,7,7,11200],["Orno",1.0234375,0.40207028388977,8,6,9000],["PHP-DI",1.1328125,1.5200543403625,11,32,14000],["Symfony",0.921875,1.2131357192993,16,9,0],["Zend",6.0859375,5.9718549251556,33,29,0]]'></div>
     <ul>
     
     </ul>
