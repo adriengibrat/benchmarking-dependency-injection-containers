@@ -5,11 +5,6 @@ return array(
         $orno->add('foo', $factory);
         return $orno->get('foo');
     },
-    'League'     => function () use ($factory) {
-        $league = new League\Di\Container;
-        $league->bind('foo', $factory);
-        return $league->resolve('foo');
-    },
     'Illuminate' => function () use ($factory) {
         $illuminate = new Illuminate\Container\Container;
         $illuminate->bind('foo', $factory);

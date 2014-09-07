@@ -9,8 +9,7 @@
         "zendframework/zend-di": "dev-master",
         "symfony/dependency-injection": "dev-master",
         "aura/di": "dev-develop-2",
-        "mnapoli/php-di": "dev-master",
-        "league/di": "dev-master"
+        "mnapoli/php-di": "dev-master"
     },
     "minimum-stability": "dev",
     "extra": {

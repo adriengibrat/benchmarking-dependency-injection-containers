@@ -9,15 +9,6 @@ return array(
         $orno->add('Benchmark\Stubs\Foo')->withArgument('Benchmark\Stubs\Bar');
         return $orno->get('Benchmark\Stubs\Foo');
     },
-    'League'     => function () {
-        $league = new League\Di\Container;
-        $league->bind('Benchmark\Stubs\Bart');
-        $league->bind('Benchmark\Stubs\Bam')->addArg('Benchmark\Stubs\Bart');
-        $league->bind('Benchmark\Stubs\Baz')->addArg('Benchmark\Stubs\Bam');
-        $league->bind('Benchmark\Stubs\Bar')->addArg('Benchmark\Stubs\Baz');
-        $league->bind('Benchmark\Stubs\Foo')->addArg('Benchmark\Stubs\Bar');
-        return $league->resolve('Benchmark\Stubs\Foo');
-    },
     /*'Illuminate' => function () {
         $illuminate = new Illuminate\Container\Container;
     },*/

@@ -6,12 +6,6 @@ return array(
         $orno->add('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
         return $orno->get('Benchmark\Stubs\Foo');
     },
-    'League'     => function () {
-        $league = new League\Di\Container;
-        $league->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');
-        $league->bind('Benchmark\Stubs\BartInterface', 'Benchmark\Stubs\Bart');
-        return $league->resolve('Benchmark\Stubs\Foo');
-    },
     'Illuminate' => function () {
         $illuminate = new Illuminate\Container\Container;
         $illuminate->bind('Benchmark\Stubs\BazInterface', 'Benchmark\Stubs\Baz');

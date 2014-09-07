@@ -9,15 +9,6 @@ return array(
         $orno->add('Benchmark\Stubs\Foo')->withMethodCall('setBar', array('Benchmark\Stubs\Bar'));
         return $orno->get('Benchmark\Stubs\Foo');
     },
-    'League'     => function () {
-        $league = new League\Di\Container;
-        $league->bind('Benchmark\Stubs\Bart');
-        $league->bind('Benchmark\Stubs\Bam')->withMethod('setBart', array('Benchmark\Stubs\Bart'));
-        $league->bind('Benchmark\Stubs\Baz')->withMethod('setBam', array('Benchmark\Stubs\Bam'));
-        $league->bind('Benchmark\Stubs\Bar')->withMethod('setBaz', array('Benchmark\Stubs\Baz'));
-        $league->bind('Benchmark\Stubs\Foo')->withMethod('setBar', array('Benchmark\Stubs\Bar'));
-        return $league->resolve('Benchmark\Stubs\Foo');
-    },
     /*'Illuminate' => function () {},*/
     'PHP-DI'     => function () {
         $builder = new DI\ContainerBuilder();
