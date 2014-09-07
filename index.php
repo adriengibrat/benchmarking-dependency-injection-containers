@@ -69,82 +69,82 @@
         Use fixed Y axis
     </label>
 <?php
-use Benchmark\Measure;
+    use Benchmark\Measure;
 
-require __DIR__ . '/vendor/autoload.php';
-$measure    = new Measure;
-$factory    = function () {
-    $bart = new Benchmark\Stubs\Bart;
-    $bam = new Benchmark\Stubs\Bam($bart);
-    $baz = new Benchmark\Stubs\Baz($bam);
-    $bar = new Benchmark\Stubs\Bar($baz);
-    return new Benchmark\Stubs\Foo($bar);
-};
-$benchmarks = array(
-    'Auto resolution of object and dependencies (Aliasing Interfaces to Concretes)'  => include 'benchmarks/Auto-resolution-alias-interface-to-concrete.php',
-    'Auto resolution of object and dependencies (Register all objects with container)' => include 'benchmarks/Auto-resolution-register-all-objects.php',
-    'Factory closure resolution' => include 'benchmarks/Factory-closure-resolution.php',
-    'Constructor injection with defined arguments' => include 'benchmarks/Constructor-injection-with-arguments.php',
-    'Setter injection with defined setter methods' => include 'benchmarks/Setter-injection-with-methods.php'
-);
-$graph_json = function (&$benchmark, $title) use ($measure) {
-    static $i = 0;
-    ++$i;
-    $sort = $results = $messages = array();
-    foreach ($benchmark as $name => $test) {
-        $code      = new ReflectionFunction($test);
-        $codeLines = $code->getEndLine() - $code->getStartLine();
-        $instance  = $test();
-        if (!isset($instance->bar->baz->bam->bart)) {
-            $messages[] = $name . ' injected a null parameter to build Foo object (used default parameter) : '
-                . preg_replace('/,(\s+)\)\)/', '$1)', str_replace('::__set_state(array', '', var_export($instance, true)));
+    require __DIR__ . '/vendor/autoload.php';
+    $measure    = new Measure;
+    $factory    = function () {
+        $bart = new Benchmark\Stubs\Bart;
+        $bam = new Benchmark\Stubs\Bam($bart);
+        $baz = new Benchmark\Stubs\Baz($bam);
+        $bar = new Benchmark\Stubs\Bar($baz);
+        return new Benchmark\Stubs\Foo($bar);
+    };
+    $benchmarks = array(
+        'Auto resolution of object and dependencies (Aliasing Interfaces to Concretes)'  => include 'benchmarks/Auto-resolution-alias-interface-to-concrete.php',
+        'Auto resolution of object and dependencies (Register all objects with container)' => include 'benchmarks/Auto-resolution-register-all-objects.php',
+        'Factory closure resolution' => include 'benchmarks/Factory-closure-resolution.php',
+        'Constructor injection with defined arguments' => include 'benchmarks/Constructor-injection-with-arguments.php',
+        'Setter injection with defined setter methods' => include 'benchmarks/Setter-injection-with-methods.php'
+    );
+    $graph_json = function (&$benchmark, $title) use ($measure) {
+        static $i = 0;
+        ++$i;
+        $sort = $results = $messages = array();
+        foreach ($benchmark as $name => $test) {
+            $code      = new ReflectionFunction($test);
+            $codeLines = $code->getEndLine() - $code->getStartLine();
+            $instance  = $test();
+            if (!isset($instance->bar->baz->bam->bart)) {
+                $messages[] = $name . ' injected a null parameter to build Foo object (used default parameter) : '
+                    . preg_replace('/\s+/', ' ', preg_replace('/,(\s+)\)\)/', '$1)', str_replace('::__set_state(array', '', var_export($instance, true))));
+            }
+            $filesInc  = count(array_filter(get_included_files(), function ($file) use ($name) {
+                return stristr($file, $name);
+            }));
+            $memory    = $measure->benchmarkMemory($test);
+            gc_collect_cycles();
+            $time      = $measure->benchmarkTime($test, [], 200);
+            $benchmark[$name] = null;
+            $collected = gc_collect_cycles();
+            $sort[]    = $name;
+            $results[] = array(
+                $name,
+                $memory[Measure::MEMORY_VALUE] / 1024,
+                $time[Measure::BENCHMARK_AVERAGE] * 1000,
+                $codeLines,
+                $filesInc,
+                $collected
+            );
         }
-        $filesInc  = count(array_filter(get_included_files(), function ($file) use ($name) {
-            return stristr($file, $name);
-        }));
-        $memory    = $measure->benchmarkMemory($test);
-        gc_collect_cycles();
-        $time      = $measure->benchmarkTime($test, [], 200);
-        $benchmark[$name] = null;
-        $collected = gc_collect_cycles();
-        $sort[]    = $name;
-        $results[] = array(
-            $name,
-            $memory[Measure::MEMORY_VALUE] / 1024,
-            $time[Measure::BENCHMARK_AVERAGE] * 1000,
-            $codeLines,
-            $filesInc,
-            $collected
-        );
-    }
-    array_multisort($sort, $results);
-    array_unshift($results, array(
-        'Component',
-        'Memory usage for one test in kb',
-        'Time per test, average in µs',
-        'Lines of code',
-        'Approx. included files',
-        'Cycle collected after ' . $time[Measure::BENCHMARK_COUNT] . ' tests'
-    ));
-    ?>
+        array_multisort($sort, $results);
+        array_unshift($results, array(
+            'Component',
+            'Memory usage for one test in kb',
+            'Time per test, average in µs',
+            'Lines of code',
+            'Approx. included files',
+            'Cycle collected after ' . $time[Measure::BENCHMARK_COUNT] . ' tests'
+        ));
+        ?>
 
     <h1>Benchmark <?= $i . ' : ' . $title; ?>.</h1>
     <div class="graph" data-results='<?php echo json_encode($results); ?>'></div>
+<?php if (!empty($messages)) : ?>
     <ul>
-    <?php
-    foreach ($messages as $message) : ?>
-        <li><?php echo $message; ?></li><?php
-    endforeach; ?>
+<?php foreach ($messages as $message) : ?>
+        <li><?php echo $message; ?></li>
+<?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+    <b>Memory peak : <?php echo memory_get_peak_usage(true) / 1024 / 1024 ?> Mb</b>
+<?php
+    };
+    gc_disable();
+    foreach ($benchmarks as $title => &$benchmark) {
+        $graph_json($benchmark, $title);
+    }
+?>
 
-    </ul><?php
-};
-gc_disable();
-foreach ($benchmarks as $title => &$benchmark) {
-    $graph_json($benchmark, $title); ?>
-
-    <br/><b>Memory peak : <?php echo  memory_get_peak_usage(true) / 1024 / 1024 ?> Mb</b>
-    <?php
-}
-    ?>
 </body>
 </html>
