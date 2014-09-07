@@ -44,18 +44,10 @@ return array(
     },
     'Zend'       => function () {
         $zend = new Zend\Di\Di;
-        $zend->instanceManager()->setParameters('Benchmark\Stubs\Foo', array(
-            'bar' => 'Benchmark\Stubs\Bar'
-        ));
-        $zend->instanceManager()->setParameters('Benchmark\Stubs\Bar', array(
-            'baz' => 'Benchmark\Stubs\Baz'
-        ));
-        $zend->instanceManager()->setParameters('Benchmark\Stubs\Baz', array(
-            'bam' => 'Benchmark\Stubs\Bam'
-        ));
-        $zend->instanceManager()->setParameters('Benchmark\Stubs\Bam', array(
-            'bart' => 'Benchmark\Stubs\Bart'
-        ));
+        $zend->instanceManager()->setParameters('Benchmark\Stubs\Foo', ['bar' => 'Benchmark\Stubs\Bar']);
+        $zend->instanceManager()->setParameters('Benchmark\Stubs\Bar', ['baz' => 'Benchmark\Stubs\Baz']);
+        $zend->instanceManager()->setParameters('Benchmark\Stubs\Baz', ['bam' => 'Benchmark\Stubs\Bam']);
+        $zend->instanceManager()->setParameters('Benchmark\Stubs\Bam', ['bart' => 'Benchmark\Stubs\Bart']);
         return $zend->get('Benchmark\Stubs\Foo');
     }
 );

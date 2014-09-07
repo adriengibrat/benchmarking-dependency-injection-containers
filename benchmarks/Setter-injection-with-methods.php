@@ -32,65 +32,53 @@ return array(
     },
     'Symfony'    => function () {
         $symfony = new Symfony\Component\DependencyInjection\ContainerBuilder;
-        $symfony->register('foo', 'Benchmark\Stubs\Foo')->addMethodCall('setBar', array(
+        $symfony->register('foo', 'Benchmark\Stubs\Foo')->addMethodCall('setBar', [
             new Symfony\Component\DependencyInjection\Reference('bar')
-        ));
-        $symfony->register('bar', 'Benchmark\Stubs\Bar')->addMethodCall('setBaz', array(
+        ]);
+        $symfony->register('bar', 'Benchmark\Stubs\Bar')->addMethodCall('setBaz', [
             new Symfony\Component\DependencyInjection\Reference('baz')
-        ));
-        $symfony->register('baz', 'Benchmark\Stubs\Baz')->addMethodCall('setBam', array(
+        ]);
+        $symfony->register('baz', 'Benchmark\Stubs\Baz')->addMethodCall('setBam', [
             new Symfony\Component\DependencyInjection\Reference('bam')
-        ));
-        $symfony->register('bam', 'Benchmark\Stubs\Bam')->addMethodCall('setBart', array(
+        ]);
+        $symfony->register('bam', 'Benchmark\Stubs\Bam')->addMethodCall('setBart', [
             new Symfony\Component\DependencyInjection\Reference('bart')
-        ));
+        ]);
         $symfony->register('bart', 'Benchmark\Stubs\Bart');
         return $symfony->get('foo');
     },
     'Zend'       => function () {
         $zend = new Zend\Di\Di;
-        $zend->configure(new Zend\Di\Config(array(
-            'definition' => array(
-                'class' => array(
-                    'Benchmark\Stubs\Bam' => array(
-                        'setBart' => array(
+        $zend->configure(new Zend\Di\Config([
+            'definition' => [
+                'class' => [
+                    'Benchmark\Stubs\Bam' => [
+                        'setBart' => [
                             'required' => true,
-                            'bart' => array(
-                                'type' => 'Benchmark\Stubs\Bart',
-                                'required' => true
-                            )
-                        )
-                    ),
-                    'Benchmark\Stubs\Baz' => array(
-                        'setBam' => array(
+                            'bart' => ['type' => 'Benchmark\Stubs\Bart', 'required' => true]
+                        ]
+                    ],
+                    'Benchmark\Stubs\Baz' => [
+                        'setBam' => [
                             'required' => true,
-                            'bam' => array(
-                                'type' => 'Benchmark\Stubs\Bam',
-                                'required' => true
-                            )
-                        )
-                    ),
-                    'Benchmark\Stubs\Bar' => array(
-                        'setBaz' => array(
+                            'bam' => ['type' => 'Benchmark\Stubs\Bam', 'required' => true]
+                        ]
+                    ],
+                    'Benchmark\Stubs\Bar' => [
+                        'setBaz' => [
                             'required' => true,
-                            'baz' => array(
-                                'type' => 'Benchmark\Stubs\Baz',
-                                'required' => true
-                            )
-                        )
-                    ),
-                    'Benchmark\Stubs\Foo' => array(
-                        'setBar' => array(
+                            'baz' => ['type' => 'Benchmark\Stubs\Baz', 'required' => true]
+                        ]
+                    ],
+                    'Benchmark\Stubs\Foo' => [
+                        'setBar' => [
                             'required' => true,
-                            'bar' => array(
-                                'type' => 'Benchmark\Stubs\Bar',
-                                'required' => true
-                            )
-                        )
-                    )
-                )
-            )
-        )));
+                            'bar' => ['type' => 'Benchmark\Stubs\Bar', 'required' => true]
+                        ]
+                    ]
+                ]
+            ]
+        ]));
         return $zend->get('Benchmark\Stubs\Foo');
     }
 );
